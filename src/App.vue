@@ -1,26 +1,78 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="nav">
+    <!-- getItems passed down on event emitter so we can run the function within the category component -->
+  <CategoryComponent @onCategorySelect="getItems"/>
+  </div>
+  <div class="body">
+    <!--actual contents of item passed down to the item component when event emitter fires getItems-->
+    <ItemComponent :items="items" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import CategoryComponent from './components/CategoryComponent.vue';
+import ItemComponent from './components/ItemComponent.vue';
+import axios from 'axios';
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    CategoryComponent,
+    ItemComponent
+  },
+  data() {
+      return {
+        items: [],
+        error: '',
+        url: 'http://localhost:5000/api/item',
+      }
+  },
+  methods: {
+    getItems(categoryId) {
+        axios
+        .get(`${this.url}/${categoryId}`)
+        .then((response) => {
+          const data = response.data;
+          this.items = data;
+        })
+        .catch((err) => {
+          console.error(err);
+          this.error = err.message
+          throw err;
+        });
+    }
   }
 }
 </script>
 
 <style>
+.nav {
+  width: 10%;
+  float: left;
+  background: rgb(251, 247, 238);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  height: 800px;
+  padding-top: 20px;
+  font-size: 30px;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+button {
+          padding: 5px;
+        border-radius: 5px;
+        border: none;
+        background: rgb(251, 247, 238);
+        cursor: pointer;
 }
 </style>
