@@ -1,8 +1,8 @@
 <template>
-    <div>
-         <div class="title">Items</div>
+    <div v-if="items.length !== 0">
+         <div class="title">{{ selectedCategoryName }}</div>
                 <hr>
-        <div v-if="items.length !== 0" class="item-container">
+        <div class="item-container">
            
             <div class="item" v-for="(item, index) in items" v-bind:item="item" v-bind:index="index"
                 v-bind:key="item?.id">{{ item?.name }}<br /><br /> <button @click="addToCart(item?.id, item?.name)">Add to Cart</button></div>
@@ -24,7 +24,8 @@ import axios from 'axios';
 export default {
     name: 'ItemComponent',
     props: {
-        items: []
+        items: [],
+        selectedCategoryName: null,
     },
       data() {
         return {

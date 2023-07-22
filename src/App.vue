@@ -1,11 +1,11 @@
 <template>
   <div class="nav">
     <!-- getItems passed down on event emitter so we can run the function within the category component -->
-  <CategoryComponent @onCategorySelect="getItems"/>
+  <CategoryComponent :selectedCategoryId="selectedCategoryId" @onCategorySelect="getItems"/>
   </div>
   <div class="body">
     <!--actual contents of item passed down to the item component when event emitter fires getItems-->
-    <ItemComponent :items="items" />
+    <ItemComponent :selectedCategoryName="selectedCategoryName" :items="items" />
   </div>
 </template>
 
@@ -22,14 +22,18 @@ export default {
   data() {
       return {
         items: [],
+        selectedCategoryId: null,
+        selectedCategoryName: null,
         error: '',
         url: 'http://localhost:5000/api/item',
       }
   },
   methods: {
-    getItems(categoryId) {
+    getItems(category) {
+      this.selectedCategoryId = category.id;
+      this.selectedCategoryName = category.name;
         axios
-        .get(`${this.url}/${categoryId}`)
+        .get(`${this.url}/${category.id}`)
         .then((response) => {
           const data = response.data;
           this.items = data;

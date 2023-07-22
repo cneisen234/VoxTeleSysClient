@@ -4,7 +4,7 @@
     <div>Categories</div>
     <hr>
     <!--event emitter defined, this way we can select a category from here, the parent component can listen for it, and then retrieve the items to pass down to the item component-->
-    <div class="category" v-for="(category, index) in categories" v-bind:item="category" v-bind:index="index" v-bind:key="category?.id" @click="$emit('onCategorySelect', category?.id)">{{ category?.name }}</div>
+    <div class="category" v-for="(category, index) in categories" v-bind:item="category" v-bind:index="index" v-bind:key="category?.id" :class="{'category-active': selectedCategoryId === category.id}" @click="$emit('onCategorySelect', category)">{{ category?.name }}</div>
   </div>
 </div>
 </template>
@@ -15,6 +15,9 @@ import axios from 'axios';
 
 export default {
   name: 'CategoryComponent',
+   props: {
+    selectedCategoryId: null
+  },
   data() {
     return {
       categories: [],
@@ -44,5 +47,11 @@ export default {
 .category {
   cursor: pointer;
   font-size: 20px;
+}
+
+.category-active {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 700;
 }
 </style>
